@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rs.stuManage.dao.StudentMapper">
+    <!--用于与数据库字段作一一对应-->
+    <resultMap id="stuMap" type="com.rs.stuManage.entity.Student">
+        <id column="studentId" property="studentId"/>
+        <result column="name" property="name"/>
+        <result column="department" property="department"/>
+        <result column="major" property="major"/>
+    </resultMap>
+
+    <!--查询下方列出的所有列-->
+    <sql id="allColumns">
+        studentId, name, department, major
+    </sql>
+
+
+    <insert id="insertStu" parameterType="com.rs.stuManage.entity.Student">
+        insert into student (studentId, name, department, major)
+        values (#{studentId},#{name},#{department},#{major})
+    </insert>
+
+    <insert id="insertStuSelective" parameterType="com.rs.stuManage.entity.Student">
+        insert into student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">
+                studentId,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="department != null">
+                department,
+            </if>
+            <if test="major != null">
+                major,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="studentId != null" >
+                #{studentId},
+            </if>
+            <if test="name != null" >
+                #{name},
+            </if>
+            <if test="department != null" >
+                #{department},
+            </if>
+            <if test="major != null" >
+                #{major},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectStuByPrimaryKey" parameterType="java.lang.String" resultType="com.rs.stuManage.entity.Student">
+        select
+        <include refid="allColumns"/>
+        from student
+        where studentId=#{studentId}
+    </select>
+
+    <select id="selectAll" resultType="com.rs.stuManage.entity.Student">
+        select * from student
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from student
+        where studentId=#{studentId}
+    </delete>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.rs.stuManage.entity.Student" >
+        update student
+        <set >
+            <if test="name != null" >
+                name = #{name},
+            </if>
+            <if test="department != null" >
+                department = #{department},
+            </if>
+            <if test="major != null" >
+                major = #{major},
+            </if>
+        </set>
+        where studentId = #{studentId}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.rs.stuManage.entity.Student">
+    update student
+    set name = #{name,jdbcType=CHAR},
+      department = #{department},
+      major = #{major},
+    where studentId = #{studentId}
+  </update>
+    <!--    &lt;!&ndash;定义表名&ndash;&gt;-->
+    <!--    <sql id="tableName">-->
+    <!--        userinfo-->
+    <!--    </sql>-->
+
+    <!--    <select id="all" resultMap="userInfoMap">-->
+    <!--        SELECT-->
+    <!--        <include refid="allColumns"/>-->
+    <!--        FROM-->
+    <!--        <include refid="tableName"/>-->
+    <!--        ORDER BY userId DESC-->
+    <!--    </select>-->
+</mapper>

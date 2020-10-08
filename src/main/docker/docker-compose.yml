@@ -1,0 +1,18 @@
+version: '3'  #compose 文件版本
+services:
+  #数据库服务名
+  stuManage-database:
+    image: mysql:latest #数据库容器所在的镜像
+    container_name: database #数据库容器名
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456 #数据库密码
+      MYSQL_DATABASE: student_info #数据库名
+    ports:
+      - "3306:3306" #端口映射
+  #后端接口服务名
+  stuManage:
+    depends_on:
+      - stuManage-database #依赖的数据库
+    image: stumanage:latest #容器所在的镜像
+    ports:
+      - "8080:8080" #端口映射
